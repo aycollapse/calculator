@@ -23,8 +23,13 @@ function displayRefresh ()
 }
 function displayWrite (event)
 {
-    displayNum += event.target.textContent;
-    if(event.target.textContent == "AC") AC();
+    displayNum = String(displayNum);
+    if(event.target.textContent != "=")
+    {
+        displayNum = displayNum.replace("+","").replace("-","").replace("x","").replace("/","").replace("=","");
+        displayNum += event.target.textContent;
+        if(event.target.textContent == "AC") AC();
+    }
     displayRefresh();
 }
 
@@ -37,14 +42,15 @@ keyPadButtons.forEach(keyPadButton => keyPadButton.addEventListener("click",disp
 //operations
 const operPad = document.querySelectorAll(".operPadButtons");
 const operPadButtons = [...operPad];
-operPadButtons.forEach(operPadButton => operPadButton.addEventListener("click",operationDetect));
+operPadButtons.forEach(operPadButton => operPadButton.addEventListener("click",function(e){operationDetect(e);displayWrite(e)}));
+
 
 function operationDetect (event)
 { 
     if (!firstNum) firstNum = Number(displayNum);
     else secNum = Number(displayNum);
     displayNum="";
-    if (secNum) displayNum = operationExecute();
+    if (secNum && operChoice) displayNum = operationExecute();
     operChoice = event.target.textContent;
     displayRefresh()
 }
@@ -60,13 +66,15 @@ function operationExecute ()
         break;
         case "/": result = divNums(firstNum,secNum)
         break;
-        case "=": return result;
+        default: break;
     }
     firstNum = result;
     secNum = 0;
+    operChoice="";
     return result;
 }
 
 //stuff to fix
-//operators not displaying
 //result and displayNum not resetting properly
+//negative numbers not dsplaying properly
+//operators influencing operation result
