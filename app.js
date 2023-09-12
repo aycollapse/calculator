@@ -8,6 +8,13 @@ const subNums = (n1,n2) => n1-n2;
 const multNums = (n1,n2) => n1*n2;
 const divNums = (n1,n2) => n1/n2;
 
+//display
+const calcDisplay = document.getElementById("calcDisplay");
+function displayRefresh ()
+{
+    calcDisplay.textContent = displayNum;
+}
+
 //all clear
 function AC()
 {
@@ -15,35 +22,23 @@ function AC()
     firstNum=0, secNum=0, operChoice="";
 }
 
-//display
-const calcDisplay = document.getElementById("calcDisplay");
-function displayRefresh ()
+function inputRead (event)
 {
-    calcDisplay.textContent = displayNum;
-}
-function displayWrite (event)
-{
-    displayNum = String(displayNum);
-    if(event.target.textContent != "=")
+    console.log("funzion")
+    if (event.target.matches(".operPadButtons"))
     {
-        displayNum = displayNum.replace("+","").replace("-","").replace("x","").replace("/","").replace("=","");
-        displayNum += event.target.textContent;
-        if(event.target.textContent == "AC") AC();
+        //op buttons
+        console.log("ao");
     }
-    displayRefresh();
+    else
+    {
+        console.log("yo");
+        //keypad buttons
+    }
+    //verificare la classe del pulsante
+    //ad ogni cambio di classe il displaynum viene resettato per evitare miscugli
+    //switch case tra le due classi se possibile anche se basta un if
 }
-
-//keypad
-const keyPad = document.querySelectorAll(".keyPadButtons");
-const keyPadButtons = [...keyPad];
-keyPadButtons.forEach(keyPadButton => keyPadButton.addEventListener("click",displayWrite));
-
-
-//operations
-const operPad = document.querySelectorAll(".operPadButtons");
-const operPadButtons = [...operPad];
-operPadButtons.forEach(operPadButton => operPadButton.addEventListener("click",function(e){operationDetect(e);displayWrite(e)}));
-
 
 function operationDetect (event)
 { 
@@ -65,8 +60,6 @@ function operationExecute ()
         case "x": result = multNums(firstNum,secNum)
         break;
         case "/": result = divNums(firstNum,secNum)
-        break;
-        default: break;
     }
     firstNum = result;
     secNum = 0;
@@ -74,7 +67,9 @@ function operationExecute ()
     return result;
 }
 
-//stuff to fix
-//result and displayNum not resetting properly
-//negative numbers not dsplaying properly
-//operators influencing operation result
+//universal event listener
+const pad = document.querySelectorAll(".operPadButtons, .keyPadButtons");
+console.log(pad)
+const padButtons = [...pad];
+console.log(padButtons)
+padButtons.forEach(padButton => padButton.addEventListener("click",inputRead));
